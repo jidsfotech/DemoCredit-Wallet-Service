@@ -1,0 +1,11 @@
+export enum Env {
+  NODE_ENV = 'NODE_ENV',
+
+  // Adjutor
+  ADJUTOR_API_ID = 'ADJUTOR_API_ID',
+  ADJUTOR_API_KEY = 'ADJUTOR_API_KEY',
+  ADJUTOR_BASE_URL = 'ADJUTOR_BASE_URL',
+
+  // jwt
+  JWT_TOKEN = 'JWT_TOKEN',
+}
