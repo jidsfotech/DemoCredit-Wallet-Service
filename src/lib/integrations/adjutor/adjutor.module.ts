@@ -2,7 +2,6 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AdjutorService } from './services/adjutor.service';
-import { Env } from '../../../common/env';
 
 @Module({
   imports: [
@@ -10,10 +9,10 @@ import { Env } from '../../../common/env';
     HttpModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        baseURL: configService.get<string>(Env.ADJUTOR_BASE_URL),
+        baseURL: configService.get<string>('ADJUTOR_BASE_URL'),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${configService.get(Env.ADJUTOR_API_KEY)}`,
+          Authorization: `Bearer ${configService.get('ADJUTOR_API_KEY')}`,
         },
       }),
       inject: [ConfigService],

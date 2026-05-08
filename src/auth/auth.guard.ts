@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { Env } from '../common/env';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -21,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       // Simulate JWT token check
-      const token = this.configService.get<string>(Env.JWT_TOKEN);
+      const token = this.configService.get<string>('JWT_TOKEN');
       if (authorizationToken !== token) {
         throw new UnauthorizedException('Invalid token');
       }

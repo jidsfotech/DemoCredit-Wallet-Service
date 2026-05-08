@@ -36,7 +36,7 @@ const KnexConfig: Record<string, Knex.Config> = {
     client: 'mysql2',
     connection: process.env.DATABASE_URL,
     migrations: {
-      directory: './dist/common/database/migrations',
+      directory: './dist/src/common/database/migrations',
     },
   },
 };
