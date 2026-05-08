@@ -347,4 +347,117 @@ describe('WalletService', () => {
       expect(mockWalletRepository.findByIdForUpdate).toHaveBeenCalled();
     });
   });
+
+  describe('withdraw', () => {
+    it('should withdraw funds successfully', async () => {
+      mockTransaction();
+
+      mockTransactionsRepository.findByReference.mockResolvedValue(null);
+
+      mockWalletRepository.findByUserId.mockResolvedValue({
+        id: 'wallet-1',
+        balance: 500,
+        status: 'active',
+      });
+
+      mockWalletRepository.getTodayWithdrawalTotal.mockResolvedValue(100);
+
+      mockWalletRepository.findByIdForUpdate.mockResolvedValue({
+        id: 'wallet-1',
+        balance: 500,
+        status: 'active',
+      });
+
+      const result = await service.withdraw({
+        userId: 'user-1',
+        amount: 100,
+        reference: 'ref-1',
+      });
+
+      expect(result).toEqual({
+        message: 'Withdrawal successful',
+        balance: 400,
+      });
+
+      expect(mockWalletRepository.updateBalance).toHaveBeenCalled();
+
+      expect(mockTransactionsRepository.create).toHaveBeenCalled();
+    });
+
+    it('should fail withdrawal on insufficient balance', async () => {
+      mockTransactionsRepository.findByReference.mockResolvedValue(null);
+
+      mockWalletRepository.findByUserId.mockResolvedValue({
+        id: 'wallet-1',
+        balance: 50,
+        status: 'active',
+      });
+
+      await expect(
+        service.withdraw({
+          userId: 'user-1',
+          amount: 200,
+          reference: 'ref-1',
+        }),
+      ).rejects.toThrow(BadRequestException);
+
+      expect(mockTransactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'failed',
+        }),
+      );
+    });
+
+    it('should fail if withdrawal exceeds daily limit', async () => {
+      mockTransactionsRepository.findByReference.mockResolvedValue(null);
+
+      mockWalletRepository.findByUserId.mockResolvedValue({
+        id: 'wallet-1',
+        balance: 1000,
+        status: 'active',
+      });
+
+      mockWalletRepository.getTodayWithdrawalTotal.mockResolvedValue(450);
+
+      await expect(
+        service.withdraw({
+          userId: 'user-1',
+          amount: 100,
+          reference: 'ref-1',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should fail if wallet is suspended', async () => {
+      mockTransactionsRepository.findByReference.mockResolvedValue(null);
+
+      mockWalletRepository.findByUserId.mockResolvedValue({
+        id: 'wallet-1',
+        balance: 1000,
+        status: 'suspended',
+      });
+
+      await expect(
+        service.withdraw({
+          userId: 'user-1',
+          amount: 100,
+          reference: 'ref-1',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should fail if transaction reference already exists', async () => {
+      mockTransactionsRepository.findByReference.mockResolvedValue({
+        id: 'trx-1',
+      });
+
+      await expect(
+        service.withdraw({
+          userId: 'user-1',
+          amount: 100,
+          reference: 'ref-1',
+        }),
+      ).rejects.toThrow(UnprocessableEntityException);
+    });
+  });
 });
