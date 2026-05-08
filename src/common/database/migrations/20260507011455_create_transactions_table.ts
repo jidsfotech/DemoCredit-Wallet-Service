@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 
     table.decimal('amount', 14, 2).notNullable();
 
-    table.uuid('reference').unique(); // idempotency safety
+    table.string('reference').unique().notNullable();
 
     table.uuid('from_wallet_id').nullable();
     table.uuid('to_wallet_id').nullable();
@@ -17,6 +17,11 @@ export async function up(knex: Knex): Promise<void> {
     table.enum('status', ['pending', 'success', 'failed']).defaultTo('success');
 
     table.foreign('wallet_id').references('wallets.id').onDelete('CASCADE');
+
+    table.decimal('balance_before', 14, 2).notNullable();
+    table.decimal('balance_after', 14, 2).notNullable();
+
+    table.string('description').notNullable();
 
     table.timestamps(true, true);
   });

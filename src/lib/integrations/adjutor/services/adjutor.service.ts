@@ -40,7 +40,14 @@ export class AdjutorService {
 
         this.logger.error(`Karma Check Failed: ${message}`);
 
-        throw new HttpException({ status: 'error', message }, status);
+        throw new HttpException(
+          {
+            status: 'error',
+            message:
+              'An unexpected error occurred please check your connection and try again',
+          },
+          status,
+        );
       }
 
       const genericError =
@@ -48,7 +55,11 @@ export class AdjutorService {
       this.logger.error(`Unexpected Error: ${genericError}`);
 
       throw new HttpException(
-        { status: 'error', message: genericError },
+        {
+          status: 'error',
+          message:
+            'An unexpected error occurred please check your connection and try again',
+        },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

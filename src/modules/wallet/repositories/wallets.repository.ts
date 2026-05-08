@@ -27,14 +27,48 @@ export class WalletRepository {
       .where({ user_id })
       .first();
 
-    if (!wallet) throw new Error(`Wallet with user_id ${user_id} not found`);
-    return wallet;
+    return wallet!;
   }
 
-  async find(params: { id: string; user_id: string }): Promise<Wallet> {
-    const wallet = await this.knex<Wallet>('wallets').where(params).first();
+  // Find wallet for update using transaction to avoid race condition
+  async findByIdForUpdate(
+    walletId: string,
+    trx: Knex.Transaction,
+  ): Promise<Wallet> {
+    const wallet = await trx<Wallet>('wallets')
+      .where({ id: walletId })
+      .forUpdate()
+      .first();
 
-    if (!wallet) throw new Error('Wallet not found');
-    return wallet;
+    return wallet!;
+  }
+
+  async updateBalance(ballanceDetails: {
+    walletId: string;
+    balance: number;
+    trx?: Knex.Transaction;
+  }) {
+    const { walletId, balance, trx } = ballanceDetails;
+    const db = trx || this.knex;
+
+    return db('wallets').where({ id: walletId }).update({
+      balance,
+      updated_at: new Date(),
+    });
+  }
+
+  async getTodayWithdrawalTotal(
+    walletId: string,
+    trx?: Knex.Transaction,
+  ): Promise<number> {
+    const db = trx ?? this.knex;
+
+    const result = await db('transactions')
+      .where({ wallet_id: walletId, type: 'withdraw', status: 'success' })
+      .whereRaw('DATE(created_at) = CURDATE()')
+      .sum('amount as total')
+      .first();
+
+    return Number(result?.total ?? 0);
   }
 }
