@@ -4,12 +4,12 @@
 
 The service allows users to:
 
-- Create an account
-- Automatically receive a wallet on signup
-- Fund their wallet
-- Transfer funds to another user
-- Withdraw funds
-- Prevent onboarding of blacklisted users using the Adjutor Karma API
+* Create an account
+* Automatically receive a wallet on signup
+* Fund their wallet
+* Transfer funds to another user
+* Withdraw funds
+* Prevent onboarding of blacklisted users using the Adjutor Karma API
 
 The application was designed with financial consistency, transaction safety, and concurrency protection in mind.
 
@@ -17,13 +17,13 @@ The application was designed with financial consistency, transaction safety, and
 
 # Tech Stack
 
-- Node.js
-- NestJS
-- TypeScript
-- KnexJS
-- MySQL
-- Jest
-- Adjutor API
+* Node.js
+* NestJS
+* TypeScript
+* KnexJS
+* MySQL
+* Jest
+* Adjutor API
 
 ---
 
@@ -31,33 +31,33 @@ The application was designed with financial consistency, transaction safety, and
 
 ## User Features
 
-- User registration
-- Faux token authentication
-- Karma blacklist validation using Adjutor API
-- Automatic wallet creation on signup
+* User registration
+* Faux token authentication
+* Karma blacklist validation using Adjutor API
+* Automatic wallet creation on signup
 
 ## Wallet Features
 
-- Fund wallet
-- Transfer funds between wallets
-- Withdraw funds
-- Daily withdrawal limit validation
-- Duplicate transaction reference protection
+* Fund wallet
+* Transfer funds between wallets
+* Withdraw funds
+* Daily withdrawal limit validation
+* Duplicate transaction reference protection
 
 ## Transaction Features
 
-- Transaction logging
-- Failed transaction logging
-- Pending transaction states
-- Transaction reference tracking
+* Transaction logging
+* Failed transaction logging
+* Pending transaction states
+* Transaction reference tracking
 
 ## Financial Safety Features
 
-- Database transaction scoping
-- Atomic balance updates
-- Row locking using `FOR UPDATE`
-- Rollback protection
-- Concurrency-safe wallet updates
+* Database transaction scoping
+* Atomic balance updates
+* Row locking using `FOR UPDATE`
+* Rollback protection
+* Concurrency-safe wallet updates
 
 ---
 
@@ -81,8 +81,6 @@ src/
 │   └── transactions/
 │
 └── test/
-├── README-assets/
-│   └── er-diagram.png
 ```
 
 ---
@@ -91,15 +89,7 @@ src/
 
 ## E-R Diagram
 
-```txt
-README-assets/er-diagram.png
-```
-
-Example markdown after exporting the image:
-
-```md
 ![ER Diagram](./README-assets/er-diagram.png)
-```
 
 ---
 
@@ -141,21 +131,21 @@ Stores wallet balances and wallet status.
 
 Stores all wallet transactions.
 
-| Column         | Type      |
-| -------------- | --------- |
-| id             | uuid      |
-| wallet_id      | uuid      |
-| from_wallet_id | uuid      |
-| to_wallet_id   | uuid      |
-| type           | enum      |
-| amount         | decimal   |
-| reference      | varchar   |
-| description    | varchar   |
-| balance_before | varchar   |
-| balance_after  | varchar   |
-| status         | varchar   |
-| created_at     | timestamp |
-| updated_at     | timestamp |
+| Column              | Type      |
+| ------------------- | --------- |
+| id                  | uuid      |
+| wallet_id           | uuid      |
+| from_wallet_id      | uuid      |
+| to_wallet_id        | uuid      |
+| type                | enum      |
+| amount              | decimal   |
+| reference           | varchar   |
+| description         | varchar   |
+| balance_before      | varchar   |
+| balance_after       | varchar   |
+| status              | varchar   |
+| created_at          | timestamp |
+| updated_at          | timestamp |
 
 ---
 
@@ -169,15 +159,15 @@ All balance-changing operations are wrapped inside database transactions.
 
 Example operations:
 
-- wallet funding
-- transfers
-- withdrawals
+* wallet funding
+* transfers
+* withdrawals
 
 This guarantees:
 
-- atomic operations
-- rollback protection
-- prevention of partial updates
+* atomic operations
+* rollback protection
+* prevention of partial updates
 
 ---
 
@@ -193,9 +183,9 @@ FOR UPDATE;
 
 This prevents:
 
-- race conditions
-- double spending
-- concurrent balance corruption
+* race conditions
+* double spending
+* concurrent balance corruption
 
 ---
 
@@ -205,15 +195,15 @@ Both successful and failed transactions are recorded.
 
 Transaction statuses include:
 
-- pending
-- success
-- failed
+* pending
+* success
+* failed
 
 This improves:
 
-- auditability
-- debugging
-- transaction traceability
+* auditability
+* debugging
+* transaction traceability
 
 ---
 
@@ -297,8 +287,8 @@ DB_NAME=
 # Faux token for authentication
 JWT_TOKEN=
 
-ADJUTOR_API_ID=
-ADJUTOR_API_KEY=
+ADJUTOR_API_ID= 
+ADJUTOR_API_KEY= 
 ADJUTOR_BASE_URL=
 ```
 
@@ -349,20 +339,20 @@ yarn test:e2e
 
 The application includes unit tests for:
 
-- user registration
-- wallet funding
-- wallet transfer
-- wallet withdrawal
-- failed transaction scenarios
-- rollback scenarios
-- insufficient balance scenarios
-- duplicate transaction protection
+* user registration
+* wallet funding
+* wallet transfer
+* wallet withdrawal
+* failed transaction scenarios
+* rollback scenarios
+* insufficient balance scenarios
+* duplicate transaction protection
 
 Mocks were used to isolate:
 
-- repositories
-- external APIs
-- database transactions
+* repositories
+* external APIs
+* database transactions
 
 ---
 
