@@ -2,7 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AdjutorService } from './services/adjutor.service';
-import { Env } from 'src/common/env';
+import { Env } from '../../../common/env';
 
 @Module({
   imports: [
