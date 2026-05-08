@@ -1,0 +1,14 @@
+PORT=
+
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+
+# Faux token for authentication
+JWT_TOKEN=
+
+ADJUTOR_API_ID= 
+ADJUTOR_API_KEY= 
+ADJUTOR_BASE_URL=
