@@ -46,6 +46,7 @@ const config: { [key: string]: Knex.Config } = {
     },
     migrations: {
       directory: './src/common/database/migrations',
+      loadExtensions: ['.js'],
     },
   },
 };
