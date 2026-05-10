@@ -7,7 +7,7 @@ export class AppController {
     return {
       status: 'OK',
       message: 'Server is running',
-      timestamp: new Date().toISOString(),
+      // timestamp: new Date().toISOString(),
     };
   }
 }
