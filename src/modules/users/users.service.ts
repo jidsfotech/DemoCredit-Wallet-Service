@@ -28,11 +28,6 @@ export class UsersService {
 
   async register(dto: CreateUserDto) {
     const { email, phone } = dto;
-    const existingUser = await this.usersRepository.findByEmail(dto.email);
-
-    if (existingUser) {
-      throw new BadRequestException('User already exists');
-    }
 
     // Check if user with email or phone is already existing
     const existingUserByEmail = await this.usersRepository.findByEmail(email);
