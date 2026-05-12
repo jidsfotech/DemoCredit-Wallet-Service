@@ -9,7 +9,6 @@ export class UsersRepository {
   constructor(@InjectConnection() private readonly knex: Knex) {}
 
   async checkDb(): Promise<boolean> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const result = await this.knex.raw('SELECT 1');
     return !!result;
   }
@@ -26,6 +25,11 @@ export class UsersRepository {
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.knex<User>('users').where({ email }).first();
+    return user!;
+  }
+
+  async findByPhone(phone: string): Promise<User> {
+    const user = await this.knex<User>('users').where({ phone }).first();
     return user!;
   }
 
