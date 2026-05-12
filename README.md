@@ -384,9 +384,11 @@ Response:
 
 | Status Code               | Description                                          |
 | --------------------------| ---------------------------------------------------- |
+| 400 Unauthorized          | Invalid request payload                              |
 | 401 Unauthorized          | Missing authorization token                          |
-| 40 Not Found              | Resource not found                                   |
-| 500 Internal Server Error | Missing authorization token                          |
+| 404 Not Found             | Resource not found                                   |
+| 409 Duplicate             | Resource already exist                               |
+| 500 Internal Server Error | Unexpected server error                              |
 
 ---
 

@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { AdjutorService } from 'src/lib/integrations/adjutor/services/adjutor.service';
 import { UsersRepository } from './repository/users.repository';
 import { WalletRepository } from '../wallet/repositories/wallets.repository';
@@ -28,29 +34,22 @@ export class UsersService {
 
   async register(dto: CreateUserDto) {
     const { email, phone } = dto;
-    const existingUser = await this.usersRepository.findByEmail(dto.email);
-
-    if (existingUser) {
-      throw new BadRequestException('User already exists');
-    }
 
     // Check if user with email or phone is already existing
     const existingUserByEmail = await this.usersRepository.findByEmail(email);
     if (existingUserByEmail) {
-      throw new BadRequestException('User with this email already exists');
+      throw new ConflictException('User with this email already exists');
     }
 
     const existingUserByPhone = await this.usersRepository.findByPhone(phone);
     if (existingUserByPhone) {
-      throw new BadRequestException(
-        'User with this phone number already exists',
-      );
+      throw new ConflictException('User with this phone number already exists');
     }
 
     const isBlacklisted = await this.isBlacklisted(dto.phone);
 
     if (isBlacklisted) {
-      throw new BadRequestException('User is blacklisted');
+      throw new ForbiddenException('User is blacklisted');
     }
 
     // Wrapped in transaction to ensure data consistency
