@@ -209,41 +209,184 @@ This improves:
 
 # API Endpoints
 
-## Authentication
+## Base URL
 
-### Register User
+All API requests should be sent to:
 
-```http
-POST /users/register
-```
-
-### Login User
-
-```http
-POST /users/login
+```txt
+https://majeed-shuaib-lendsqr-be-test.onrender.com/v1
 ```
 
 ---
 
-## Wallet
+# Authentication
+
+This API uses **Bearer Authentication** to secure protected endpoints.
+
+Clients must include the access token in the `Authorization` header.
+
+| Header        | Value                   |
+| ------------- | ----------------------- |
+| Authorization | `Bearer <access_token>` |
+
+The access token is returned after a successful login request.
+
+---
+
+## Example Fund Wallet Request
+
+```bash
+curl -X POST "<BASE_URL>/wallet/fund" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "userId": "string",
+    "amount": 1000,
+    "reference": "string"
+  }'
+```
+
+---
+
+# Available Endpoints
+
+### Register user
+```http
+POST /users/register
+```
+Request Payload:
+```json
+{
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "password": "string",
+  "phone": "string"
+}
+```
+Response:
+```josn
+{
+  "message": "string",
+  "data": {
+    "id": "string",
+    "first_name": "string",
+    "last_name": "string",
+    "email": "string",
+    "phone": "string"
+  }
+}
+```
+
+---
+
+### Login
+```http
+POST /users/login
+```
+
+Request Payload:
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+Response:
+```json
+{
+  "message": "string",
+  "data": {
+    "id": "string",
+    "token": "string"
+  }
+}
+```
+
+---
 
 ### Fund Wallet
-
 ```http
 POST /wallet/fund
 ```
 
-### Transfer Funds
+Request Payload:
+```json
+{
+  "userId": "string",
+  "amount": "number",
+  "reference": "string"
+}
+```
 
+Response:
+```json
+{
+  "message": "string",
+  "balance": "number"
+}
+```
+
+---
+
+### Transfer Funds
 ```http
 POST /wallet/transfer
 ```
 
-### Withdraw Funds
+### Request
+Request Payload:
+```json
+{
+  "amount": "number",
+  "receiverUserId": "string",
+  "senderUserId": "string"
+}
+```
 
+Response:
+```json
+{
+  "message": "string",
+  "balance": "number"
+}
+```
+
+----
+
+### Withdraw Funds
 ```http
 POST /wallet/withdraw
 ```
+
+Request Payload:
+```json
+{
+  "amount": "number",
+  "userId": "string",
+  "reference": "string"
+}
+```
+
+Response:
+```json
+{
+  "message": "string",
+  "balance": "number"
+}
+```
+
+---
+
+# Error Responses
+
+| Status Code               | Description                                          |
+| --------------------------| ---------------------------------------------------- |
+| 401 Unauthorized          | Missing authorization token                          |
+| 40 Not Found              | Resource not found                                   |
+| 500 Internal Server Error | Missing authorization token                          |
 
 ---
 

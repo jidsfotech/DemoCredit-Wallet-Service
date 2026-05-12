@@ -27,10 +27,24 @@ export class UsersService {
   }
 
   async register(dto: CreateUserDto) {
+    const { email, phone } = dto;
     const existingUser = await this.usersRepository.findByEmail(dto.email);
 
     if (existingUser) {
       throw new BadRequestException('User already exists');
+    }
+
+    // Check if user with email or phone is already existing
+    const existingUserByEmail = await this.usersRepository.findByEmail(email);
+    if (existingUserByEmail) {
+      throw new BadRequestException('User with this email already exists');
+    }
+
+    const existingUserByPhone = await this.usersRepository.findByPhone(phone);
+    if (existingUserByPhone) {
+      throw new BadRequestException(
+        'User with this phone number already exists',
+      );
     }
 
     const isBlacklisted = await this.isBlacklisted(dto.phone);
@@ -65,7 +79,16 @@ export class UsersService {
         trx,
       );
 
-      return user;
+      return {
+        message: 'User created successfully',
+        data: {
+          id: user.id,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+          phone: user.phone,
+        },
+      };
     });
   }
 
